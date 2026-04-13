@@ -5,6 +5,7 @@ const path = require('path');
 
 const PORT = 3000;
 const API_BASE = 'https://seats.aero/partnerapi';
+const DATA_FILE = path.join(__dirname, '.local-data.json');
 
 const MIME_TYPES = {
     '.html': 'text/html',
@@ -15,10 +16,20 @@ const MIME_TYPES = {
     '.ico': 'image/x-icon'
 };
 
+// Simple local file-based storage (mirrors KV in production)
+function loadLocalData() {
+    try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
+    catch { return {}; }
+}
+
+function saveLocalData(data) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
+
 const server = http.createServer((req, res) => {
-    // CORS headers for all responses
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 
     if (req.method === 'OPTIONS') {
         res.writeHead(204);
@@ -26,9 +37,41 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // Proxy API requests: /api/* -> seats.aero/partnerapi/*
+    // Data storage endpoints
+    if (req.url.startsWith('/data/')) {
+        const collection = req.url.replace('/data/', '').replace(/\//g, '');
+        const validCollections = ['profile', 'flights', 'programs', 'settings'];
+
+        if (!validCollections.includes(collection)) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid collection' }));
+            return;
+        }
+
+        if (req.method === 'GET') {
+            const store = loadLocalData();
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ data: store[collection] || null }));
+            return;
+        }
+
+        if (req.method === 'PUT') {
+            let body = '';
+            req.on('data', chunk => body += chunk);
+            req.on('end', () => {
+                const store = loadLocalData();
+                store[collection] = JSON.parse(body).data;
+                saveLocalData(store);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ ok: true }));
+            });
+            return;
+        }
+    }
+
+    // Proxy API requests
     if (req.url.startsWith('/api/')) {
-        const apiPath = req.url.slice(4); // strip /api
+        const apiPath = req.url.slice(4);
         const targetUrl = `${API_BASE}${apiPath}`;
 
         const headers = {};

@@ -1,3 +1,7 @@
 name = "flight-tracker-api"
 main = "worker.js"
 compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "FLIGHT_DATA"
+id = "e538d2c5415248989fa3d78905b4e2a0"

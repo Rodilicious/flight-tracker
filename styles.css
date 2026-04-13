@@ -1228,6 +1228,30 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Sync indicator */
+.sync-indicator {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.sync-indicator.sync-ok {
+    background: var(--success);
+    color: white;
+}
+
+.sync-indicator.sync-error {
+    background: var(--accent);
+    color: white;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     header { padding: 1.5rem 1rem; }

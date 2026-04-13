@@ -6,9 +6,10 @@ if ('serviceWorker' in navigator) {
 // ── Constants ──
 const STORAGE_KEY = 'flightTracker_flights';
 const API_KEY_STORAGE = 'flightTracker_apiKey';
-// Use local proxy in dev, Cloudflare Worker in production (GitHub Pages)
 const IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-const API_BASE = IS_LOCAL ? '/api' : 'https://flight-tracker-api.rod-crowder.workers.dev/api';
+const WORKER_BASE = IS_LOCAL ? '' : 'https://flight-tracker-api.rod-crowder.workers.dev';
+const API_BASE = WORKER_BASE + '/api';
+const DATA_BASE = WORKER_BASE + '/data';
 
 const SOURCE_NAMES = {
     qantas: 'Qantas Points',
@@ -47,6 +48,51 @@ const AMEX_TRANSFER_PARTNERS = [
 
 const CABIN_LABELS = { Y: 'Economy', W: 'Premium Econ', J: 'Business', F: 'First' };
 
+// ── Cloud sync ──
+// All data syncs to Cloudflare KV via the worker, with localStorage as cache/fallback.
+async function cloudGet(collection) {
+    try {
+        const syncKey = getApiKey();
+        if (!syncKey) return null;
+        const resp = await fetch(`${DATA_BASE}/${collection}`, {
+            headers: { 'X-Sync-Key': syncKey }
+        });
+        if (!resp.ok) return null;
+        const result = await resp.json();
+        return result.data;
+    } catch {
+        return null;
+    }
+}
+
+async function cloudPut(collection, data) {
+    try {
+        const syncKey = getApiKey();
+        if (!syncKey) return;
+        await fetch(`${DATA_BASE}/${collection}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Sync-Key': syncKey },
+            body: JSON.stringify({ data })
+        });
+    } catch {
+        // Silently fail - localStorage is the fallback
+    }
+}
+
+// Sync indicator
+function showSyncStatus(msg, isError) {
+    let el = document.getElementById('sync-indicator');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'sync-indicator';
+        document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.className = 'sync-indicator ' + (isError ? 'sync-error' : 'sync-ok');
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 2000);
+}
+
 // ── Tab navigation ──
 document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -82,6 +128,7 @@ document.getElementById('save-api-key').addEventListener('click', () => {
     if (key) {
         setApiKey(key);
         checkApiKey();
+        cloudPut('settings', { apiKey: key });
         input.value = '';
     }
 });
@@ -486,6 +533,15 @@ function loadFlights() {
 
 function saveFlights(flights) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(flights));
+    cloudPut('flights', flights).then(() => showSyncStatus('Synced'));
+}
+
+async function syncFlightsFromCloud() {
+    const cloud = await cloudGet('flights');
+    if (cloud && Array.isArray(cloud)) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cloud));
+        renderFlights(getCurrentFilter());
+    }
 }
 
 function formatDate(dateStr) {
@@ -615,8 +671,9 @@ function loadProfile() {
     return data ? JSON.parse(data) : {};
 }
 
-function saveProfile(profile) {
+function saveProfileLocal(profile) {
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    cloudPut('profile', profile).then(() => showSyncStatus('Profile synced'));
 }
 
 function loadPrograms() {
@@ -624,8 +681,39 @@ function loadPrograms() {
     return data ? JSON.parse(data) : [];
 }
 
-function savePrograms(programs) {
+function saveProgramsLocal(programs) {
     localStorage.setItem(PROGRAMS_KEY, JSON.stringify(programs));
+    cloudPut('programs', programs).then(() => showSyncStatus('Programs synced'));
+}
+
+async function syncAllFromCloud() {
+    showSyncStatus('Syncing...');
+
+    const [cloudProfile, cloudFlights, cloudPrograms, cloudSettings] = await Promise.all([
+        cloudGet('profile'),
+        cloudGet('flights'),
+        cloudGet('programs'),
+        cloudGet('settings')
+    ]);
+
+    if (cloudProfile) {
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(cloudProfile));
+    }
+    if (cloudFlights && Array.isArray(cloudFlights)) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudFlights));
+    }
+    if (cloudPrograms && Array.isArray(cloudPrograms)) {
+        localStorage.setItem(PROGRAMS_KEY, JSON.stringify(cloudPrograms));
+    }
+    if (cloudSettings) {
+        if (cloudSettings.apiKey) setApiKey(cloudSettings.apiKey);
+    }
+
+    // Re-render everything
+    renderFlights(getCurrentFilter());
+    initProfile();
+    checkApiKey();
+    showSyncStatus('Synced from cloud');
 }
 
 function initProfile() {
@@ -655,7 +743,7 @@ document.getElementById('save-profile').addEventListener('click', () => {
         pax: document.getElementById('p-pax').value,
         notes: document.getElementById('p-notes').value
     };
-    saveProfile(profile);
+    saveProfileLocal(profile);
 
     // Update header points display if changed
     if (profile.points) {
@@ -673,6 +761,7 @@ document.getElementById('save-api-key-profile').addEventListener('click', () => 
     if (key) {
         setApiKey(key);
         checkApiKey();
+        cloudPut('settings', { apiKey: key });
         const status = document.getElementById('api-key-profile-status');
         status.textContent = 'Saved!';
         setTimeout(() => { status.textContent = ''; }, 2000);
@@ -699,7 +788,7 @@ document.getElementById('add-program').addEventListener('click', () => {
         program, number, email, password, balance, tier,
         addedAt: new Date().toISOString()
     });
-    savePrograms(programs);
+    saveProgramsLocal(programs);
     renderPrograms();
 
     // Reset form
@@ -742,10 +831,13 @@ function renderPrograms() {
 function deleteProgram(id) {
     if (!confirm('Remove this program?')) return;
     const programs = loadPrograms().filter(p => p.id !== id);
-    savePrograms(programs);
+    saveProgramsLocal(programs);
     renderPrograms();
 }
 
-// Initial render
+// Initial render from localStorage (fast), then sync from cloud
 renderFlights();
 initProfile();
+
+// Sync from cloud on load (updates localStorage + re-renders)
+syncAllFromCloud();
