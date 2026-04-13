@@ -8,7 +8,7 @@ const STORAGE_KEY = 'flightTracker_flights';
 const API_KEY_STORAGE = 'flightTracker_apiKey';
 // Use local proxy in dev, Cloudflare Worker in production (GitHub Pages)
 const IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-const API_BASE = IS_LOCAL ? '/api' : 'https://flight-tracker-api.rodcrowder.workers.dev/api';
+const API_BASE = IS_LOCAL ? '/api' : 'https://flight-tracker-api.rod-crowder.workers.dev/api';
 
 const SOURCE_NAMES = {
     qantas: 'Qantas Points',
