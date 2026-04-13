@@ -48,6 +48,88 @@ const AMEX_TRANSFER_PARTNERS = [
 
 const CABIN_LABELS = { Y: 'Economy', W: 'Premium Econ', J: 'Business', F: 'First' };
 
+// ── Airport database for autocomplete ──
+const AIRPORTS = [
+    // Australia
+    { code: 'SYD', name: 'Sydney', country: 'Australia' },
+    { code: 'MEL', name: 'Melbourne', country: 'Australia' },
+    { code: 'BNE', name: 'Brisbane', country: 'Australia' },
+    { code: 'PER', name: 'Perth', country: 'Australia' },
+    { code: 'ADL', name: 'Adelaide', country: 'Australia' },
+    { code: 'CBR', name: 'Canberra', country: 'Australia' },
+    { code: 'OOL', name: 'Gold Coast', country: 'Australia' },
+    { code: 'CNS', name: 'Cairns', country: 'Australia' },
+    // Italy
+    { code: 'VCE', name: 'Venice', country: 'Italy' },
+    { code: 'MXP', name: 'Milan Malpensa', country: 'Italy' },
+    { code: 'FCO', name: 'Rome Fiumicino', country: 'Italy' },
+    { code: 'NAP', name: 'Naples', country: 'Italy' },
+    { code: 'BLQ', name: 'Bologna', country: 'Italy' },
+    { code: 'FLR', name: 'Florence', country: 'Italy' },
+    { code: 'TRN', name: 'Turin', country: 'Italy' },
+    { code: 'PSA', name: 'Pisa', country: 'Italy' },
+    { code: 'CTA', name: 'Catania', country: 'Italy' },
+    { code: 'PMO', name: 'Palermo', country: 'Italy' },
+    // Major European hubs
+    { code: 'LHR', name: 'London Heathrow', country: 'UK' },
+    { code: 'LGW', name: 'London Gatwick', country: 'UK' },
+    { code: 'CDG', name: 'Paris Charles de Gaulle', country: 'France' },
+    { code: 'AMS', name: 'Amsterdam Schiphol', country: 'Netherlands' },
+    { code: 'FRA', name: 'Frankfurt', country: 'Germany' },
+    { code: 'MUC', name: 'Munich', country: 'Germany' },
+    { code: 'ZRH', name: 'Zurich', country: 'Switzerland' },
+    { code: 'VIE', name: 'Vienna', country: 'Austria' },
+    { code: 'MAD', name: 'Madrid', country: 'Spain' },
+    { code: 'BCN', name: 'Barcelona', country: 'Spain' },
+    { code: 'IST', name: 'Istanbul', country: 'Turkey' },
+    { code: 'ATH', name: 'Athens', country: 'Greece' },
+    { code: 'LIS', name: 'Lisbon', country: 'Portugal' },
+    { code: 'CPH', name: 'Copenhagen', country: 'Denmark' },
+    { code: 'ARN', name: 'Stockholm Arlanda', country: 'Sweden' },
+    { code: 'OSL', name: 'Oslo', country: 'Norway' },
+    { code: 'HEL', name: 'Helsinki', country: 'Finland' },
+    { code: 'DUB', name: 'Dublin', country: 'Ireland' },
+    { code: 'BRU', name: 'Brussels', country: 'Belgium' },
+    { code: 'WAW', name: 'Warsaw', country: 'Poland' },
+    { code: 'PRG', name: 'Prague', country: 'Czech Republic' },
+    { code: 'BUD', name: 'Budapest', country: 'Hungary' },
+    { code: 'GVA', name: 'Geneva', country: 'Switzerland' },
+    // Middle East hubs
+    { code: 'DOH', name: 'Doha', country: 'Qatar' },
+    { code: 'DXB', name: 'Dubai', country: 'UAE' },
+    { code: 'AUH', name: 'Abu Dhabi', country: 'UAE' },
+    // Asian hubs
+    { code: 'SIN', name: 'Singapore', country: 'Singapore' },
+    { code: 'HKG', name: 'Hong Kong', country: 'Hong Kong' },
+    { code: 'NRT', name: 'Tokyo Narita', country: 'Japan' },
+    { code: 'HND', name: 'Tokyo Haneda', country: 'Japan' },
+    { code: 'BKK', name: 'Bangkok', country: 'Thailand' },
+    { code: 'KUL', name: 'Kuala Lumpur', country: 'Malaysia' },
+    { code: 'ICN', name: 'Seoul Incheon', country: 'South Korea' },
+    { code: 'TPE', name: 'Taipei', country: 'Taiwan' },
+    { code: 'DEL', name: 'Delhi', country: 'India' },
+    { code: 'BOM', name: 'Mumbai', country: 'India' },
+    // Americas
+    { code: 'LAX', name: 'Los Angeles', country: 'USA' },
+    { code: 'JFK', name: 'New York JFK', country: 'USA' },
+    { code: 'SFO', name: 'San Francisco', country: 'USA' },
+    { code: 'ORD', name: 'Chicago O\'Hare', country: 'USA' },
+    { code: 'DFW', name: 'Dallas Fort Worth', country: 'USA' },
+    { code: 'MIA', name: 'Miami', country: 'USA' },
+    { code: 'IAD', name: 'Washington Dulles', country: 'USA' },
+    { code: 'YVR', name: 'Vancouver', country: 'Canada' },
+    { code: 'YYZ', name: 'Toronto', country: 'Canada' },
+    // New Zealand
+    { code: 'AKL', name: 'Auckland', country: 'New Zealand' },
+    { code: 'CHC', name: 'Christchurch', country: 'New Zealand' },
+    { code: 'WLG', name: 'Wellington', country: 'New Zealand' },
+    // Africa
+    { code: 'JNB', name: 'Johannesburg', country: 'South Africa' },
+    { code: 'CPT', name: 'Cape Town', country: 'South Africa' },
+    // Pacific
+    { code: 'NAN', name: 'Nadi', country: 'Fiji' },
+];
+
 // ── Cloud sync ──
 // All data syncs to Cloudflare KV via the worker, with localStorage as cache/fallback.
 async function cloudGet(collection) {
@@ -100,6 +182,78 @@ document.querySelectorAll('.tab').forEach(tab => {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         tab.classList.add('active');
         document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+});
+
+// ── Airport autocomplete ──
+function setupAutocomplete(inputId, suggestionsId) {
+    const input = document.getElementById(inputId);
+    const sugBox = document.getElementById(suggestionsId);
+
+    input.addEventListener('input', () => {
+        const val = input.value;
+        // Get the last token being typed (after the last comma)
+        const parts = val.split(',');
+        const query = parts[parts.length - 1].trim().toUpperCase();
+
+        if (query.length < 2) {
+            sugBox.innerHTML = '';
+            sugBox.style.display = 'none';
+            return;
+        }
+
+        const matches = AIRPORTS.filter(a =>
+            a.code.includes(query) ||
+            a.name.toUpperCase().includes(query) ||
+            a.country.toUpperCase().includes(query)
+        ).slice(0, 8);
+
+        if (matches.length === 0) {
+            sugBox.innerHTML = '';
+            sugBox.style.display = 'none';
+            return;
+        }
+
+        sugBox.innerHTML = matches.map(a =>
+            `<div class="suggestion" data-code="${a.code}">
+                <strong>${a.code}</strong> ${a.name}, ${a.country}
+            </div>`
+        ).join('');
+        sugBox.style.display = 'block';
+
+        sugBox.querySelectorAll('.suggestion').forEach(el => {
+            el.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                const code = el.dataset.code;
+                // Replace the last token with the selected code
+                const parts = input.value.split(',').map(p => p.trim()).filter(Boolean);
+                parts[parts.length - 1] = code;
+                input.value = parts.join(',');
+                sugBox.style.display = 'none';
+                input.focus();
+            });
+        });
+    });
+
+    input.addEventListener('blur', () => {
+        setTimeout(() => { sugBox.style.display = 'none'; }, 200);
+    });
+
+    input.addEventListener('focus', () => {
+        // Clean up value on focus
+        const val = input.value.trim();
+        if (val) input.value = val;
+    });
+}
+
+setupAutocomplete('s-origin', 'origin-suggestions');
+setupAutocomplete('s-dest', 'dest-suggestions');
+
+// Quick pick buttons
+document.querySelectorAll('.pick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target);
+        target.value = btn.dataset.value;
     });
 });
 

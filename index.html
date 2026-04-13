@@ -50,26 +50,31 @@
             <!-- Search controls -->
             <div class="search-controls">
                 <div class="search-row">
-                    <div class="search-field">
+                    <div class="search-field search-field-wide">
                         <label>From</label>
-                        <select id="s-origin">
-                            <option value="SYD,MEL">Sydney + Melbourne</option>
-                            <option value="SYD">Sydney (SYD)</option>
-                            <option value="MEL">Melbourne (MEL)</option>
-                            <option value="BNE">Brisbane (BNE)</option>
-                            <option value="PER">Perth (PER)</option>
-                            <option value="SYD,MEL,BNE,PER">All major AU cities</option>
-                        </select>
+                        <input type="text" id="s-origin" placeholder="e.g. SYD, MEL or type to search..." autocomplete="off" value="SYD,MEL">
+                        <div class="airport-suggestions" id="origin-suggestions"></div>
+                        <div class="quick-picks">
+                            <button type="button" class="pick-btn" data-target="s-origin" data-value="SYD,MEL">SYD+MEL</button>
+                            <button type="button" class="pick-btn" data-target="s-origin" data-value="SYD,MEL,BNE,PER">All AU</button>
+                            <button type="button" class="pick-btn" data-target="s-origin" data-value="SYD">SYD</button>
+                            <button type="button" class="pick-btn" data-target="s-origin" data-value="MEL">MEL</button>
+                            <button type="button" class="pick-btn" data-target="s-origin" data-value="BNE">BNE</button>
+                            <button type="button" class="pick-btn" data-target="s-origin" data-value="PER">PER</button>
+                        </div>
                     </div>
-                    <div class="search-field">
+                    <div class="search-field search-field-wide">
                         <label>To</label>
-                        <select id="s-dest">
-                            <option value="VCE,MXP,FCO">Venice + Milan + Rome</option>
-                            <option value="VCE">Venice (VCE) only</option>
-                            <option value="MXP">Milan (MXP) only</option>
-                            <option value="FCO">Rome (FCO) only</option>
-                            <option value="VCE,MXP">Venice + Milan</option>
-                        </select>
+                        <input type="text" id="s-dest" placeholder="e.g. VCE, FCO or type to search..." autocomplete="off" value="VCE,MXP,FCO">
+                        <div class="airport-suggestions" id="dest-suggestions"></div>
+                        <div class="quick-picks">
+                            <button type="button" class="pick-btn" data-target="s-dest" data-value="VCE,MXP,FCO">Venice+Milan+Rome</button>
+                            <button type="button" class="pick-btn" data-target="s-dest" data-value="VCE">VCE</button>
+                            <button type="button" class="pick-btn" data-target="s-dest" data-value="MXP">MXP</button>
+                            <button type="button" class="pick-btn" data-target="s-dest" data-value="FCO">FCO</button>
+                            <button type="button" class="pick-btn" data-target="s-dest" data-value="VCE,MXP,FCO,NAP,BLQ,FLR,TRN,PSA">All Italy</button>
+                            <button type="button" class="pick-btn" data-target="s-dest" data-value="LHR,CDG,AMS,FRA,FCO,MXP,VCE,MAD,BCN,ZRH,MUC,VIE">Major Europe</button>
+                        </div>
                     </div>
                     <div class="search-field">
                         <label>Date From</label>
