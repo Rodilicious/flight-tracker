@@ -141,11 +141,17 @@ document.getElementById('search-return-btn').addEventListener('click', () => {
     runSearch();
 });
 
+document.getElementById('search-oneway-btn').addEventListener('click', () => {
+    currentDirection = 'oneway';
+    runSearch();
+});
+
 async function runSearch() {
     const status = document.getElementById('search-status');
     const results = document.getElementById('search-results');
     const btn = document.getElementById('search-btn');
     const returnBtn = document.getElementById('search-return-btn');
+    const onewayBtn = document.getElementById('search-oneway-btn');
 
     let origin = document.getElementById('s-origin').value;
     let dest = document.getElementById('s-dest').value;
@@ -157,9 +163,11 @@ async function runSearch() {
     if (currentDirection === 'return') {
         [origin, dest] = [dest, origin];
     }
+    // One-way uses the origin/dest as entered (same as outbound direction)
 
     btn.disabled = true;
     returnBtn.disabled = true;
+    onewayBtn.disabled = true;
     status.textContent = 'Searching...';
     status.className = 'search-status searching';
     results.innerHTML = '<div class="loading">Searching for award availability...</div>';
@@ -203,6 +211,7 @@ async function runSearch() {
     } finally {
         btn.disabled = false;
         returnBtn.disabled = false;
+        onewayBtn.disabled = false;
     }
 }
 
@@ -239,7 +248,8 @@ function renderResults(results, direction) {
         grouped[date].push(r);
     }
 
-    const dirLabel = direction === 'outbound' ? 'Outbound' : 'Return';
+    const dirLabels = { outbound: 'Outbound', return: 'Return', oneway: 'One-Way' };
+    const dirLabel = dirLabels[direction] || 'Outbound';
     let html = `<div class="results-header"><h3>${dirLabel} Flights</h3></div>`;
 
     const sortedDates = Object.keys(grouped).sort();
@@ -320,7 +330,8 @@ function renderResultCard(r, direction) {
 
     if (!cabinRows) return '';
 
-    const dirLabel = direction === 'outbound' ? 'Outbound (AU&rarr;Italy)' : 'Return (Italy&rarr;AU)';
+    const saveDirLabels = { outbound: 'Outbound (AU&rarr;Italy)', return: 'Return (Italy&rarr;AU)', oneway: 'One-Way' };
+    const dirLabel = saveDirLabels[direction] || direction;
     const best = getBestCabin(r);
     const saveData = encodeURIComponent(JSON.stringify({
         airline: best.airlines || source,

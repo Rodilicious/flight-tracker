@@ -391,6 +391,15 @@ h2 {
     background: #c53030;
 }
 
+.btn-secondary {
+    background: #718096;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #4a5568;
+}
+
 /* Tracker */
 .tracker-form {
     background: var(--card-bg);
