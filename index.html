@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a365d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FlightTracker">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>Points Flight Tracker - Australia to Venice</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Points Flight Tracker</h1>
+        <p class="subtitle">Australia &rarr; Venice &middot; ~29 Aug 2026 &middot; 2 Pax &middot; Business/First</p>
+        <div class="points-budget">
+            <span class="label">Amex MR Balance</span>
+            <span class="value">1,000,000 pts</span>
+        </div>
+    </header>
+
+    <nav>
+        <button class="tab active" data-tab="routes">Routes &amp; Costs</button>
+        <button class="tab" data-tab="partners">Transfer Partners</button>
+        <button class="tab" data-tab="search">Search Links</button>
+        <button class="tab" data-tab="tracker">Availability Tracker</button>
+        <button class="tab" data-tab="strategy">Strategy</button>
+    </nav>
+
+    <main>
+        <!-- ROUTES & COSTS TAB -->
+        <section id="routes" class="tab-content active">
+            <h2>Best Routes &amp; Estimated Award Costs</h2>
+            <p class="note">Costs shown are per person, one-way in Business unless noted. First class where available shown in parentheses.</p>
+
+            <div class="route-cards">
+                <div class="route-card top-pick">
+                    <div class="ribbon">Top Pick</div>
+                    <h3>Qatar Airways via Doha</h3>
+                    <div class="route-detail">
+                        <div class="route-path">MEL/SYD &rarr; DOH &rarr; VCE</div>
+                        <div class="aircraft">A380 / 777 &middot; QSuites Business</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item">
+                            <span class="program">Asia Miles (Cathay)</span>
+                            <span class="miles">85,000 mi</span>
+                            <span class="total-label">2 pax return: 340,000</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="program">Qantas Points (direct)</span>
+                            <span class="miles">119,400 mi</span>
+                            <span class="total-label">2 pax return: 477,600</span>
+                        </div>
+                    </div>
+                    <div class="notes">QSuites is widely considered the best business class. Qatar flies DOH&rarr;VCE direct. Book via Asia Miles for best value.</div>
+                </div>
+
+                <div class="route-card top-pick">
+                    <div class="ribbon">Top Pick</div>
+                    <h3>Singapore Airlines via Singapore</h3>
+                    <div class="route-detail">
+                        <div class="route-path">MEL/SYD/BNE/PER &rarr; SIN &rarr; MXP/FCO</div>
+                        <div class="aircraft">A380 / 777 &middot; SQ New Business or First</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item">
+                            <span class="program">KrisFlyer</span>
+                            <span class="miles">98,000 mi (Biz) / 148,750 (First)</span>
+                            <span class="total-label">2 pax return Biz: 392,000 | First: 595,000</span>
+                        </div>
+                    </div>
+                    <div class="notes">SQ doesn't fly to VCE &mdash; fly to Milan MXP (2.5hr train to Venice) or Rome FCO. SQ First (Suites) is the ultimate experience. KrisFlyer is 1:1 Amex transfer.</div>
+                </div>
+
+                <div class="route-card">
+                    <h3>Emirates via Dubai</h3>
+                    <div class="route-detail">
+                        <div class="route-path">MEL/SYD/BNE/PER &rarr; DXB &rarr; VCE</div>
+                        <div class="aircraft">A380 &middot; Emirates Business / First</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item">
+                            <span class="program">Emirates Skywards</span>
+                            <span class="miles">~115,000 mi (Biz) / ~170,000 (First)</span>
+                            <span class="total-label">2 pax return Biz: 460,000 | First: 680,000</span>
+                        </div>
+                    </div>
+                    <div class="notes">Emirates flies DXB&rarr;VCE direct. Good availability on the A380 first class shower suite. Transfer ratio from Amex can vary &mdash; check current rate.</div>
+                </div>
+
+                <div class="route-card">
+                    <h3>Etihad via Abu Dhabi</h3>
+                    <div class="route-detail">
+                        <div class="route-path">MEL/SYD &rarr; AUH &rarr; VCE</div>
+                        <div class="aircraft">787 / A350 &middot; Etihad Business Studios</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item">
+                            <span class="program">Etihad Guest</span>
+                            <span class="miles">~88,000 mi (Biz)</span>
+                            <span class="total-label">2 pax return: ~352,000</span>
+                        </div>
+                    </div>
+                    <div class="notes">Etihad flies AUH&rarr;VCE seasonally &mdash; verify Aug 2026 schedule. Business Studios are excellent. Amex transfers 1:1 to Etihad Guest.</div>
+                </div>
+
+                <div class="route-card">
+                    <h3>ANA via Tokyo</h3>
+                    <div class="route-detail">
+                        <div class="route-path">SYD &rarr; NRT/HND &rarr; European hub &rarr; VCE</div>
+                        <div class="aircraft">777 / 787 &middot; ANA "The Room" Business</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item">
+                            <span class="program">ANA Mileage Club</span>
+                            <span class="miles">88,000 mi (Biz RT!) / 165,000 (First RT!)</span>
+                            <span class="total-label">2 pax return Biz: 176,000 | First: 330,000</span>
+                        </div>
+                    </div>
+                    <div class="notes"><strong>ANA prices are ROUND TRIP!</strong> Incredible value. Book via ANA website. Can route via Tokyo + European hub. "The Room" is a top-5 business class product. Hardest part is finding availability.</div>
+                </div>
+
+                <div class="route-card">
+                    <h3>Cathay Pacific via Hong Kong</h3>
+                    <div class="route-detail">
+                        <div class="route-path">MEL/SYD/BNE/PER &rarr; HKG &rarr; MXP/FCO</div>
+                        <div class="aircraft">A350 / 777 &middot; Cathay Business</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item">
+                            <span class="program">Asia Miles</span>
+                            <span class="miles">85,000 mi (Biz) / 135,000 (First)</span>
+                            <span class="total-label">2 pax return Biz: 340,000 | First: 540,000</span>
+                        </div>
+                    </div>
+                    <div class="notes">Cathay doesn't fly to VCE &mdash; use MXP (Milan). Asia Miles is 1:1 from Amex. Cathay First on the 777 is fantastic.</div>
+                </div>
+
+                <div class="route-card">
+                    <h3>Thai Airways via Bangkok</h3>
+                    <div class="route-detail">
+                        <div class="route-path">MEL/SYD &rarr; BKK &rarr; European hub &rarr; VCE</div>
+                        <div class="aircraft">A350 / 777 &middot; Thai Royal Silk Business</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item">
+                            <span class="program">Royal Orchid Plus</span>
+                            <span class="miles">~80,000 mi (Biz)</span>
+                            <span class="total-label">2 pax return: ~320,000</span>
+                        </div>
+                    </div>
+                    <div class="notes">Thai flies to Rome and Milan via BKK. Good value and decent availability. Amex transfers to Royal Orchid Plus.</div>
+                </div>
+
+                <div class="route-card">
+                    <h3>Virgin Atlantic (book partner flights)</h3>
+                    <div class="route-detail">
+                        <div class="route-path">Various routings via VS partners (ANA, SQ, etc.)</div>
+                        <div class="aircraft">Partner airlines</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item">
+                            <span class="program">Virgin Points</span>
+                            <span class="miles">Varies &mdash; can book ANA for ~90-120k OW</span>
+                            <span class="total-label">Check VS website for partner awards</span>
+                        </div>
+                    </div>
+                    <div class="notes">Virgin Atlantic Flying Club can book on ANA, SQ, and other partners. Sometimes finds availability others can't. 1:1 Amex transfer.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANSFER PARTNERS TAB -->
+        <section id="partners" class="tab-content">
+            <h2>Amex Membership Rewards Transfer Partners (Australia)</h2>
+            <p class="note">All transfer ratios shown are from Amex MR to airline miles. Transfer times vary.</p>
+
+            <table class="partner-table">
+                <thead>
+                    <tr>
+                        <th>Airline Program</th>
+                        <th>Transfer Ratio</th>
+                        <th>Transfer Time</th>
+                        <th>Best For</th>
+                        <th>Alliance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight">
+                        <td>Singapore Airlines KrisFlyer</td>
+                        <td>1:1</td>
+                        <td>1-2 days</td>
+                        <td>SQ flights to Europe via SIN. First class Suites.</td>
+                        <td>Star Alliance</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Cathay Pacific Asia Miles</td>
+                        <td>1:1</td>
+                        <td>1-2 days</td>
+                        <td>Qatar QSuites bookings, CX own flights, oneworld partners</td>
+                        <td>oneworld</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>ANA Mileage Club</td>
+                        <td>1:1</td>
+                        <td>2-3 days</td>
+                        <td>Round-trip awards at insane value (88k RT Biz!)</td>
+                        <td>Star Alliance</td>
+                    </tr>
+                    <tr>
+                        <td>Virgin Atlantic Flying Club</td>
+                        <td>1:1</td>
+                        <td>Instant-1 day</td>
+                        <td>Partner bookings on ANA, SQ, others</td>
+                        <td>SkyTeam</td>
+                    </tr>
+                    <tr>
+                        <td>Emirates Skywards</td>
+                        <td>1:1</td>
+                        <td>1-2 days</td>
+                        <td>Emirates A380 First/Business via Dubai</td>
+                        <td>Independent</td>
+                    </tr>
+                    <tr>
+                        <td>Etihad Guest</td>
+                        <td>1:1</td>
+                        <td>1-2 days</td>
+                        <td>Etihad Business Studios via Abu Dhabi</td>
+                        <td>Independent</td>
+                    </tr>
+                    <tr>
+                        <td>Thai Royal Orchid Plus</td>
+                        <td>1:1</td>
+                        <td>1-3 days</td>
+                        <td>Thai flights via Bangkok, Star Alliance partners</td>
+                        <td>Star Alliance</td>
+                    </tr>
+                    <tr>
+                        <td>Malaysia Enrich</td>
+                        <td>1:1</td>
+                        <td>1-3 days</td>
+                        <td>Malaysia Airlines via KUL, oneworld partners</td>
+                        <td>oneworld</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="transfer-tips">
+                <h3>Transfer Tips</h3>
+                <ul>
+                    <li><strong>Never transfer speculatively</strong> &mdash; find availability first, then transfer points</li>
+                    <li><strong>Transfer times matter</strong> &mdash; award seats can disappear. KrisFlyer &amp; Asia Miles are fastest</li>
+                    <li><strong>ANA requires round-trip bookings</strong> &mdash; but the pricing is per round-trip, making it incredible value</li>
+                    <li><strong>Hold if possible</strong> &mdash; some programs let you hold an award ticket for 24-72hrs while points transfer</li>
+                    <li><strong>Taxes vary wildly</strong> &mdash; SQ charges low taxes; BA/QF charge fuel surcharges that can be $500+ per person</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SEARCH LINKS TAB -->
+        <section id="search" class="tab-content">
+            <h2>Direct Airline Award Search Links</h2>
+            <p class="note">Search these sites directly for award availability. Most require a free loyalty account to search.</p>
+
+            <div class="search-params">
+                <h3>Your Search Parameters</h3>
+                <div class="param-grid">
+                    <div class="param">
+                        <label>From</label>
+                        <select id="departure-city">
+                            <option value="MEL">Melbourne (MEL)</option>
+                            <option value="SYD">Sydney (SYD)</option>
+                            <option value="BNE">Brisbane (BNE)</option>
+                            <option value="PER">Perth (PER)</option>
+                            <option value="ADL">Adelaide (ADL)</option>
+                        </select>
+                    </div>
+                    <div class="param">
+                        <label>To</label>
+                        <span class="fixed-value">Venice (VCE) / Milan (MXP) / Rome (FCO)</span>
+                    </div>
+                    <div class="param">
+                        <label>Date Range</label>
+                        <input type="date" id="date-from" value="2026-08-25">
+                        <span>to</span>
+                        <input type="date" id="date-to" value="2026-09-02">
+                    </div>
+                    <div class="param">
+                        <label>Passengers</label>
+                        <span class="fixed-value">2</span>
+                    </div>
+                    <div class="param">
+                        <label>Class</label>
+                        <span class="fixed-value">Business / First</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-links-grid">
+                <div class="search-link-card priority">
+                    <h4>Seats.aero</h4>
+                    <p>Aggregates award availability across many programs. Best first stop.</p>
+                    <a href="https://seats.aero" target="_blank" class="btn">Open Seats.aero</a>
+                    <span class="tip">Free tier available. Set alerts for your dates.</span>
+                </div>
+
+                <div class="search-link-card priority">
+                    <h4>Qantas Award Search</h4>
+                    <p>Search oneworld availability (Qatar, Cathay, BA, etc.) &mdash; "Classic Rewards"</p>
+                    <a href="https://www.qantas.com/au/en/book-a-trip/flights.html" target="_blank" class="btn">Open Qantas</a>
+                    <span class="tip">Toggle "Use points" &rarr; Classic Rewards. Best for finding Qatar QSuites.</span>
+                </div>
+
+                <div class="search-link-card priority">
+                    <h4>Singapore Airlines KrisFlyer</h4>
+                    <p>Search SQ own flights &amp; Star Alliance partners</p>
+                    <a href="https://www.singaporeair.com/en_UK/sg/plan-travel/redemption/" target="_blank" class="btn">Open KrisFlyer</a>
+                    <span class="tip">Only shows SQ-operated flights. For partners, use the "redeem flights" page.</span>
+                </div>
+
+                <div class="search-link-card priority">
+                    <h4>ANA Award Search</h4>
+                    <p>Round-trip awards at exceptional value. Search Star Alliance availability.</p>
+                    <a href="https://www.ana.co.jp/en/us/amc/reference/tyo/usage/award/int/" target="_blank" class="btn">Open ANA</a>
+                    <span class="tip">Must book round-trip. 88k Biz RT is the sweet spot. Search 355 days out.</span>
+                </div>
+
+                <div class="search-link-card">
+                    <h4>Cathay Pacific Asia Miles</h4>
+                    <p>Search oneworld partner availability including Qatar</p>
+                    <a href="https://www.cathaypacific.com/cx/en_HK/redeem-flights.html" target="_blank" class="btn">Open Asia Miles</a>
+                    <span class="tip">Can book Qatar QSuites with Asia Miles at great rates.</span>
+                </div>
+
+                <div class="search-link-card">
+                    <h4>Emirates Skywards</h4>
+                    <p>Search Emirates own flights to Venice via Dubai</p>
+                    <a href="https://www.emirates.com/au/english/" target="_blank" class="btn">Open Emirates</a>
+                    <span class="tip">Search cash flights first, then check "Pay with Miles" option.</span>
+                </div>
+
+                <div class="search-link-card">
+                    <h4>Etihad Guest</h4>
+                    <p>Search Etihad flights via Abu Dhabi</p>
+                    <a href="https://www.etihad.com/en-au/" target="_blank" class="btn">Open Etihad</a>
+                    <span class="tip">Check if AUH-VCE operates in Aug 2026.</span>
+                </div>
+
+                <div class="search-link-card">
+                    <h4>Virgin Atlantic Flying Club</h4>
+                    <p>Book ANA &amp; other partner flights, sometimes unique availability</p>
+                    <a href="https://www.virginatlantic.com/flight-search" target="_blank" class="btn">Open Virgin Atlantic</a>
+                    <span class="tip">Can sometimes find ANA space that ANA's own site doesn't show.</span>
+                </div>
+
+                <div class="search-link-card">
+                    <h4>points.me</h4>
+                    <p>Award flight search aggregator</p>
+                    <a href="https://points.me" target="_blank" class="btn">Open points.me</a>
+                    <span class="tip">Paid tool but good for cross-program comparisons.</span>
+                </div>
+
+                <div class="search-link-card">
+                    <h4>Cowtool (ExpertFlyer alternative)</h4>
+                    <p>Check award seat inventory codes directly</p>
+                    <a href="https://cowtool.com" target="_blank" class="btn">Open Cowtool</a>
+                    <span class="tip">Advanced tool. Check for "I" (Star Alliance biz) and "O" (oneworld biz) award inventory.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRACKER TAB -->
+        <section id="tracker" class="tab-content">
+            <h2>Availability Tracker</h2>
+            <p class="note">Log award flights you find so you can compare options and track when to book.</p>
+
+            <div class="tracker-form">
+                <h3>Log a Flight</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="t-airline">Airline</label>
+                        <select id="t-airline">
+                            <option value="">Select...</option>
+                            <option>Qatar Airways</option>
+                            <option>Singapore Airlines</option>
+                            <option>Emirates</option>
+                            <option>Etihad</option>
+                            <option>ANA</option>
+                            <option>Cathay Pacific</option>
+                            <option>Thai Airways</option>
+                            <option>Malaysia Airlines</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="t-route">Route</label>
+                        <input type="text" id="t-route" placeholder="e.g. MEL-DOH-VCE">
+                    </div>
+                    <div class="form-group">
+                        <label for="t-date">Flight Date</label>
+                        <input type="date" id="t-date" value="2026-08-29">
+                    </div>
+                    <div class="form-group">
+                        <label for="t-class">Class</label>
+                        <select id="t-class">
+                            <option>Business</option>
+                            <option>First</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="t-program">Booking Program</label>
+                        <select id="t-program">
+                            <option value="">Select...</option>
+                            <option>KrisFlyer</option>
+                            <option>Asia Miles</option>
+                            <option>ANA Mileage Club</option>
+                            <option>Virgin Points</option>
+                            <option>Skywards</option>
+                            <option>Etihad Guest</option>
+                            <option>Royal Orchid Plus</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="t-miles">Miles per Person</label>
+                        <input type="number" id="t-miles" placeholder="e.g. 85000">
+                    </div>
+                    <div class="form-group">
+                        <label for="t-taxes">Taxes/Fees per Person</label>
+                        <input type="text" id="t-taxes" placeholder="e.g. $150 AUD">
+                    </div>
+                    <div class="form-group">
+                        <label for="t-seats">Seats Available</label>
+                        <input type="number" id="t-seats" placeholder="e.g. 2" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="t-direction">Direction</label>
+                        <select id="t-direction">
+                            <option>Outbound (AU &rarr; VCE)</option>
+                            <option>Return (VCE &rarr; AU)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="t-notes">Notes</label>
+                        <textarea id="t-notes" placeholder="Flight numbers, connection times, product details..."></textarea>
+                    </div>
+                </div>
+                <button id="save-flight" class="btn btn-primary">Save Flight</button>
+            </div>
+
+            <div class="tracker-list">
+                <h3>Saved Flights</h3>
+                <div class="tracker-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="outbound">Outbound</button>
+                    <button class="filter-btn" data-filter="return">Return</button>
+                    <button class="filter-btn" data-filter="starred">Starred</button>
+                </div>
+                <div id="flight-list"></div>
+                <div id="points-summary" class="points-summary"></div>
+            </div>
+        </section>
+
+        <!-- STRATEGY TAB -->
+        <section id="strategy" class="tab-content">
+            <h2>Booking Strategy</h2>
+
+            <div class="strategy-section">
+                <h3>Your Points Budget</h3>
+                <div class="budget-breakdown">
+                    <div class="budget-item">
+                        <span class="budget-label">Amex MR Balance</span>
+                        <span class="budget-value">1,000,000</span>
+                    </div>
+                    <div class="budget-scenarios">
+                        <h4>What You Can Afford (2 pax, return)</h4>
+                        <table>
+                            <tr><td>ANA Business RT</td><td>176,000 pts</td><td class="affordable">824k remaining</td></tr>
+                            <tr><td>ANA First RT</td><td>330,000 pts</td><td class="affordable">670k remaining</td></tr>
+                            <tr><td>Qatar Biz (via Asia Miles)</td><td>340,000 pts</td><td class="affordable">660k remaining</td></tr>
+                            <tr><td>SQ Business RT</td><td>392,000 pts</td><td class="affordable">608k remaining</td></tr>
+                            <tr><td>Cathay First RT (Asia Miles)</td><td>540,000 pts</td><td class="affordable">460k remaining</td></tr>
+                            <tr><td>SQ First RT</td><td>595,000 pts</td><td class="affordable">405k remaining</td></tr>
+                            <tr><td>Emirates First RT</td><td>680,000 pts</td><td class="affordable">320k remaining</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strategy-section">
+                <h3>Recommended Approach</h3>
+                <div class="strategy-steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Search Now (Today)</h4>
+                            <p>Aug 2026 is ~4.5 months away. Some airlines release award space 330-355 days out, so availability should be opening up. Start searching immediately on:</p>
+                            <ul>
+                                <li><strong>Seats.aero</strong> &mdash; set up alerts for your route/dates</li>
+                                <li><strong>Qantas.com</strong> &mdash; search Classic Rewards for Qatar QSuites</li>
+                                <li><strong>ANA website</strong> &mdash; check round-trip availability (best value)</li>
+                                <li><strong>KrisFlyer</strong> &mdash; SQ own flights to Milan</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Be Flexible on Dates &amp; Airports</h4>
+                            <p>Search a window of Aug 25 &ndash; Sep 2. Consider:</p>
+                            <ul>
+                                <li><strong>Venice (VCE)</strong> &mdash; ideal, Qatar &amp; Emirates fly here direct from their hubs</li>
+                                <li><strong>Milan (MXP)</strong> &mdash; 2.5hr train to Venice, opens up SQ &amp; Cathay options</li>
+                                <li><strong>Rome (FCO)</strong> &mdash; more availability, 3.5hr train or cheap domestic flight</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Mix &amp; Match Outbound/Return</h4>
+                            <p>You don't need the same airline both ways. Great combos:</p>
+                            <ul>
+                                <li><strong>Out:</strong> Qatar QSuites via DOH &rarr; <strong>Return:</strong> SQ via SIN</li>
+                                <li><strong>Out:</strong> Emirates First via DXB &rarr; <strong>Return:</strong> ANA via TYO</li>
+                                <li><strong>Out:</strong> SQ Suites via SIN &rarr; <strong>Return:</strong> Cathay via HKG</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Don't Transfer Until Ready</h4>
+                            <p>Keep points in Amex MR until you've confirmed availability with 2 seats. Then:</p>
+                            <ol>
+                                <li>Confirm 2 seats are available on the exact flights</li>
+                                <li>If the program offers a hold, place a hold</li>
+                                <li>Transfer the exact points needed (transfers are one-way &amp; irreversible)</li>
+                                <li>Book immediately when points arrive</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Watch for These Opportunities</h4>
+                            <ul>
+                                <li><strong>Amex transfer bonuses</strong> &mdash; periodically 20-30% bonus to certain partners (makes expensive options cheaper)</li>
+                                <li><strong>Last-minute award dumps</strong> &mdash; airlines often release more award space 2-4 weeks before departure</li>
+                                <li><strong>Mixed cabin</strong> &mdash; some programs allow First on one leg, Business on another</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strategy-section">
+                <h3>Key Dates Timeline</h3>
+                <div class="timeline">
+                    <div class="timeline-item past">
+                        <div class="timeline-date">Oct 2025</div>
+                        <div class="timeline-desc">ANA award calendar opened for Aug 2026 (355 days out)</div>
+                    </div>
+                    <div class="timeline-item past">
+                        <div class="timeline-date">Nov 2025</div>
+                        <div class="timeline-desc">Most airlines opened Aug 2026 schedule (330 days out)</div>
+                    </div>
+                    <div class="timeline-item current">
+                        <div class="timeline-date">Apr 2026 (Now)</div>
+                        <div class="timeline-desc">Good time to search &amp; book. ~4.5 months out. Availability is established.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Jun-Jul 2026</div>
+                        <div class="timeline-desc">Last comfortable booking window. Availability may tighten for peak summer.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Aug 2026</div>
+                        <div class="timeline-desc">Possible last-minute award dumps 2-4 weeks before. Risky strategy.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Points costs are estimates based on published award charts and may vary. Always verify on the airline's website. Last updated: April 2026.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
