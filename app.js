@@ -330,20 +330,15 @@ async function apiGetTrips(availabilityId) {
 }
 
 // ── Search handler ──
-let currentDirection = 'outbound';
+let searchMode = 'oneway'; // 'oneway' or 'return'
 
 document.getElementById('search-btn').addEventListener('click', () => {
-    currentDirection = 'outbound';
+    searchMode = 'oneway';
     runSearch();
 });
 
 document.getElementById('search-return-btn').addEventListener('click', () => {
-    currentDirection = 'return';
-    runSearch();
-});
-
-document.getElementById('search-oneway-btn').addEventListener('click', () => {
-    currentDirection = 'oneway';
+    searchMode = 'return';
     runSearch();
 });
 
@@ -352,55 +347,106 @@ async function runSearch() {
     const results = document.getElementById('search-results');
     const btn = document.getElementById('search-btn');
     const returnBtn = document.getElementById('search-return-btn');
-    const onewayBtn = document.getElementById('search-oneway-btn');
 
-    let origin = document.getElementById('s-origin').value;
-    let dest = document.getElementById('s-dest').value;
+    const origin = document.getElementById('s-origin').value.trim();
+    const dest = document.getElementById('s-dest').value.trim();
     const dateFrom = document.getElementById('s-date-from').value;
     const dateTo = document.getElementById('s-date-to').value;
     const cabins = document.getElementById('s-cabin').value;
 
-    // Swap origin/dest for return flights
-    if (currentDirection === 'return') {
-        [origin, dest] = [dest, origin];
+    if (!origin || !dest) {
+        status.textContent = 'Please enter From and To airports.';
+        status.className = 'search-status error';
+        return;
     }
-    // One-way uses the origin/dest as entered (same as outbound direction)
 
     btn.disabled = true;
     returnBtn.disabled = true;
-    onewayBtn.disabled = true;
     status.textContent = 'Searching...';
     status.className = 'search-status searching';
     results.innerHTML = '<div class="loading">Searching for award availability...</div>';
 
     try {
-        const data = await apiSearch({
-            origin_airport: origin,
-            destination_airport: dest,
-            start_date: dateFrom,
-            end_date: dateTo,
-            cabins: cabins,
-            take: 500,
-            include_filtered: true
-        });
+        if (searchMode === 'oneway') {
+            // One-way: search From → To
+            const data = await apiSearch({
+                origin_airport: origin,
+                destination_airport: dest,
+                start_date: dateFrom,
+                end_date: dateTo,
+                cabins: cabins,
+                take: 500,
+                include_filtered: true
+            });
 
-        if (!data || !data.data || data.data.length === 0) {
-            status.textContent = `No results found for these dates. Try widening your date range or airports.`;
-            status.className = 'search-status no-results';
-            results.innerHTML = renderNoResults(origin, dest, dateFrom, dateTo);
-            return;
+            if (!data || !data.data || data.data.length === 0) {
+                status.textContent = 'No results found. Try widening your date range or airports.';
+                status.className = 'search-status no-results';
+                results.innerHTML = renderNoResults(origin, dest, dateFrom, dateTo);
+                return;
+            }
+
+            status.textContent = `Found ${data.data.length} result${data.data.length > 1 ? 's' : ''}.`;
+            status.className = 'search-status has-results';
+            results.innerHTML = renderResults(data.data, 'oneway');
+
+        } else {
+            // Return: search both From → To AND To → From
+            status.textContent = 'Searching outbound and return...';
+            const [outData, retData] = await Promise.all([
+                apiSearch({
+                    origin_airport: origin,
+                    destination_airport: dest,
+                    start_date: dateFrom,
+                    end_date: dateTo,
+                    cabins: cabins,
+                    take: 250,
+                    include_filtered: true
+                }),
+                apiSearch({
+                    origin_airport: dest,
+                    destination_airport: origin,
+                    start_date: dateFrom,
+                    end_date: dateTo,
+                    cabins: cabins,
+                    take: 250,
+                    include_filtered: true
+                })
+            ]);
+
+            const outCount = outData?.data?.length || 0;
+            const retCount = retData?.data?.length || 0;
+            const total = outCount + retCount;
+
+            if (total === 0) {
+                status.textContent = 'No results found in either direction. Try widening your date range or airports.';
+                status.className = 'search-status no-results';
+                results.innerHTML = renderNoResults(origin, dest, dateFrom, dateTo);
+                return;
+            }
+
+            status.textContent = `Found ${outCount} outbound + ${retCount} return results.`;
+            status.className = 'search-status has-results';
+
+            let html = '';
+            if (outCount > 0) {
+                html += renderResults(outData.data, 'outbound');
+            } else {
+                html += '<div class="no-results-box"><h3>No outbound flights found</h3></div>';
+            }
+            html += '<hr style="margin:2rem 0; border:none; border-top:2px solid var(--border);">';
+            if (retCount > 0) {
+                html += renderResults(retData.data, 'return');
+            } else {
+                html += '<div class="no-results-box"><h3>No return flights found</h3></div>';
+            }
+            results.innerHTML = html;
         }
 
-        status.textContent = `Found ${data.data.length} result${data.data.length > 1 ? 's' : ''}. ${data.hasMore ? '(More available - narrow your search)' : ''}`;
-        status.className = 'search-status has-results';
-        results.innerHTML = renderResults(data.data, currentDirection);
-
-        // Attach event listeners to trip detail buttons
+        // Attach event listeners
         results.querySelectorAll('.trip-details-btn').forEach(btn => {
             btn.addEventListener('click', () => loadTripDetails(btn));
         });
-
-        // Attach save buttons
         results.querySelectorAll('.save-result-btn').forEach(btn => {
             btn.addEventListener('click', () => saveFromResult(btn));
         });
@@ -412,7 +458,6 @@ async function runSearch() {
     } finally {
         btn.disabled = false;
         returnBtn.disabled = false;
-        onewayBtn.disabled = false;
     }
 }
 
@@ -449,9 +494,9 @@ function renderResults(results, direction) {
         grouped[date].push(r);
     }
 
-    const dirLabels = { outbound: 'Outbound', return: 'Return', oneway: 'One-Way' };
-    const dirLabel = dirLabels[direction] || 'Outbound';
-    let html = `<div class="results-header"><h3>${dirLabel} Flights</h3></div>`;
+    const dirLabels = { outbound: 'Outbound Flights', return: 'Return Flights', oneway: 'Flights' };
+    const dirLabel = dirLabels[direction] || 'Flights';
+    let html = `<div class="results-header"><h3>${dirLabel}</h3></div>`;
 
     const sortedDates = Object.keys(grouped).sort();
 
@@ -531,7 +576,7 @@ function renderResultCard(r, direction) {
 
     if (!cabinRows) return '';
 
-    const saveDirLabels = { outbound: 'Outbound (AU&rarr;Italy)', return: 'Return (Italy&rarr;AU)', oneway: 'One-Way' };
+    const saveDirLabels = { outbound: 'Outbound', return: 'Return', oneway: 'One-Way' };
     const dirLabel = saveDirLabels[direction] || direction;
     const best = getBestCabin(r);
     const saveData = encodeURIComponent(JSON.stringify({
