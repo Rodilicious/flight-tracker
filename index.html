@@ -28,6 +28,7 @@
         <button class="tab" data-tab="partners">Transfer Partners</button>
         <button class="tab" data-tab="links">Airline Links</button>
         <button class="tab" data-tab="strategy">Strategy</button>
+        <button class="tab" data-tab="profile">Profile</button>
     </nav>
 
     <main>
@@ -371,6 +372,124 @@
             <div class="strategy-section">
                 <h3>Settings</h3>
                 <button class="btn" id="change-api-key">Change Seats.aero API Key</button>
+            </div>
+        </section>
+        <!-- PROFILE TAB -->
+        <section id="profile" class="tab-content">
+            <h2>My Profile</h2>
+
+            <div class="profile-section">
+                <h3>Traveller Details</h3>
+                <div class="profile-grid">
+                    <div class="profile-field">
+                        <label>Name</label>
+                        <input type="text" id="p-name" placeholder="Full name as on passport">
+                    </div>
+                    <div class="profile-field">
+                        <label>Email</label>
+                        <input type="email" id="p-email" placeholder="Email address">
+                    </div>
+                    <div class="profile-field">
+                        <label>Phone</label>
+                        <input type="tel" id="p-phone" placeholder="Phone number">
+                    </div>
+                    <div class="profile-field">
+                        <label>Departure City</label>
+                        <select id="p-city">
+                            <option value="MEL">Melbourne (MEL)</option>
+                            <option value="SYD">Sydney (SYD)</option>
+                            <option value="BNE">Brisbane (BNE)</option>
+                            <option value="PER">Perth (PER)</option>
+                            <option value="ADL">Adelaide (ADL)</option>
+                        </select>
+                    </div>
+                    <div class="profile-field">
+                        <label>Amex MR Points Balance</label>
+                        <input type="number" id="p-points" placeholder="e.g. 1000000">
+                    </div>
+                    <div class="profile-field">
+                        <label>Passengers</label>
+                        <input type="number" id="p-pax" placeholder="e.g. 2" min="1" max="9">
+                    </div>
+                    <div class="profile-field full-width">
+                        <label>Notes</label>
+                        <textarea id="p-notes" placeholder="Travel preferences, passport details, dietary requirements..."></textarea>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="save-profile">Save Profile</button>
+                <span id="profile-status" class="save-status"></span>
+            </div>
+
+            <div class="profile-section">
+                <h3>Airline Rewards Programs</h3>
+                <p class="note">Store your loyalty program details. Data is saved locally on this device only.</p>
+
+                <div id="programs-list"></div>
+
+                <div class="add-program-form">
+                    <h4>Add Program</h4>
+                    <div class="profile-grid">
+                        <div class="profile-field">
+                            <label>Program</label>
+                            <select id="ap-program">
+                                <option value="">Select...</option>
+                                <option>Qantas Frequent Flyer</option>
+                                <option>Singapore Airlines KrisFlyer</option>
+                                <option>Cathay Pacific Asia Miles</option>
+                                <option>ANA Mileage Club</option>
+                                <option>Virgin Atlantic Flying Club</option>
+                                <option>Emirates Skywards</option>
+                                <option>Etihad Guest</option>
+                                <option>Thai Royal Orchid Plus</option>
+                                <option>Malaysia Enrich</option>
+                                <option>Velocity Frequent Flyer</option>
+                                <option>Qatar Privilege Club</option>
+                                <option>British Airways Executive Club</option>
+                                <option>United MileagePlus</option>
+                                <option>American AAdvantage</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="profile-field">
+                            <label>Member Number</label>
+                            <input type="text" id="ap-number" placeholder="Membership/account number">
+                        </div>
+                        <div class="profile-field">
+                            <label>Email / Username</label>
+                            <input type="text" id="ap-email" placeholder="Login email or username">
+                        </div>
+                        <div class="profile-field">
+                            <label>Password</label>
+                            <input type="password" id="ap-password" placeholder="Account password">
+                        </div>
+                        <div class="profile-field">
+                            <label>Miles/Points Balance</label>
+                            <input type="number" id="ap-balance" placeholder="Current balance">
+                        </div>
+                        <div class="profile-field">
+                            <label>Status/Tier</label>
+                            <input type="text" id="ap-status" placeholder="e.g. Gold, Platinum">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="add-program">Add Program</button>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Seats.aero API Key</h3>
+                <div class="profile-grid">
+                    <div class="profile-field">
+                        <label>API Key</label>
+                        <input type="password" id="p-api-key" placeholder="pro_xxxxx...">
+                    </div>
+                </div>
+                <button class="btn" id="save-api-key-profile">Save API Key</button>
+                <span id="api-key-profile-status" class="save-status"></span>
+            </div>
+
+            <div class="profile-section security-note">
+                <h3>Security Note</h3>
+                <p>All data is stored locally on this device using browser localStorage. Nothing is sent to any server. However, localStorage is not encrypted &mdash; anyone with access to this device could read this data. Use at your own discretion.</p>
             </div>
         </section>
     </main>

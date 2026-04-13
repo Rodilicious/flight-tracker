@@ -606,5 +606,146 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
+// ── Profile ──
+const PROFILE_KEY = 'flightTracker_profile';
+const PROGRAMS_KEY = 'flightTracker_programs';
+
+function loadProfile() {
+    const data = localStorage.getItem(PROFILE_KEY);
+    return data ? JSON.parse(data) : {};
+}
+
+function saveProfile(profile) {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+}
+
+function loadPrograms() {
+    const data = localStorage.getItem(PROGRAMS_KEY);
+    return data ? JSON.parse(data) : [];
+}
+
+function savePrograms(programs) {
+    localStorage.setItem(PROGRAMS_KEY, JSON.stringify(programs));
+}
+
+function initProfile() {
+    const profile = loadProfile();
+    if (profile.name) document.getElementById('p-name').value = profile.name;
+    if (profile.email) document.getElementById('p-email').value = profile.email;
+    if (profile.phone) document.getElementById('p-phone').value = profile.phone;
+    if (profile.city) document.getElementById('p-city').value = profile.city;
+    if (profile.points) document.getElementById('p-points').value = profile.points;
+    if (profile.pax) document.getElementById('p-pax').value = profile.pax;
+    if (profile.notes) document.getElementById('p-notes').value = profile.notes;
+
+    // Load API key into profile field
+    const apiKey = getApiKey();
+    if (apiKey) document.getElementById('p-api-key').value = apiKey;
+
+    renderPrograms();
+}
+
+document.getElementById('save-profile').addEventListener('click', () => {
+    const profile = {
+        name: document.getElementById('p-name').value,
+        email: document.getElementById('p-email').value,
+        phone: document.getElementById('p-phone').value,
+        city: document.getElementById('p-city').value,
+        points: document.getElementById('p-points').value,
+        pax: document.getElementById('p-pax').value,
+        notes: document.getElementById('p-notes').value
+    };
+    saveProfile(profile);
+
+    // Update header points display if changed
+    if (profile.points) {
+        const display = document.querySelector('.points-budget .value');
+        if (display) display.textContent = Number(profile.points).toLocaleString() + ' pts';
+    }
+
+    const status = document.getElementById('profile-status');
+    status.textContent = 'Saved!';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+});
+
+document.getElementById('save-api-key-profile').addEventListener('click', () => {
+    const key = document.getElementById('p-api-key').value.trim();
+    if (key) {
+        setApiKey(key);
+        checkApiKey();
+        const status = document.getElementById('api-key-profile-status');
+        status.textContent = 'Saved!';
+        setTimeout(() => { status.textContent = ''; }, 2000);
+    }
+});
+
+// Airline programs
+document.getElementById('add-program').addEventListener('click', () => {
+    const program = document.getElementById('ap-program').value;
+    const number = document.getElementById('ap-number').value;
+    const email = document.getElementById('ap-email').value;
+    const password = document.getElementById('ap-password').value;
+    const balance = document.getElementById('ap-balance').value;
+    const tier = document.getElementById('ap-status').value;
+
+    if (!program) {
+        alert('Please select a program.');
+        return;
+    }
+
+    const programs = loadPrograms();
+    programs.push({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        program, number, email, password, balance, tier,
+        addedAt: new Date().toISOString()
+    });
+    savePrograms(programs);
+    renderPrograms();
+
+    // Reset form
+    document.getElementById('ap-program').value = '';
+    document.getElementById('ap-number').value = '';
+    document.getElementById('ap-email').value = '';
+    document.getElementById('ap-password').value = '';
+    document.getElementById('ap-balance').value = '';
+    document.getElementById('ap-status').value = '';
+});
+
+function renderPrograms() {
+    const programs = loadPrograms();
+    const list = document.getElementById('programs-list');
+
+    if (programs.length === 0) {
+        list.innerHTML = '<p class="note">No programs added yet.</p>';
+        return;
+    }
+
+    list.innerHTML = programs.map(p => `
+        <div class="program-card">
+            <div class="program-info">
+                <h4>${p.program}</h4>
+                <div class="program-details">
+                    ${p.number ? `<span><strong>Member #:</strong> ${p.number}</span>` : ''}
+                    ${p.email ? `<span><strong>Login:</strong> ${p.email}</span>` : ''}
+                    ${p.password ? `<span><strong>Password:</strong> <span class="password-hidden" onclick="this.textContent=this.dataset.pw; this.classList.remove('password-hidden')" data-pw="${p.password.replace(/"/g, '&quot;')}">Click to reveal</span></span>` : ''}
+                    ${p.balance ? `<span><strong>Balance:</strong> ${Number(p.balance).toLocaleString()} pts</span>` : ''}
+                    ${p.tier ? `<span><strong>Status:</strong> ${p.tier}</span>` : ''}
+                </div>
+            </div>
+            <div class="program-actions">
+                <button class="delete-btn" onclick="deleteProgram('${p.id}')" title="Delete">&#10005;</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function deleteProgram(id) {
+    if (!confirm('Remove this program?')) return;
+    const programs = loadPrograms().filter(p => p.id !== id);
+    savePrograms(programs);
+    renderPrograms();
+}
+
 // Initial render
 renderFlights();
+initProfile();

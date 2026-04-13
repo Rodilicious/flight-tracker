@@ -772,6 +772,132 @@ footer {
     margin-top: 2rem;
 }
 
+/* Profile */
+.profile-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.profile-section h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.profile-section h4 {
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+    font-size: 0.95rem;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.profile-field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.profile-field input,
+.profile-field select,
+.profile-field textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+}
+
+.profile-field textarea {
+    height: 70px;
+    resize: vertical;
+}
+
+.profile-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.save-status {
+    margin-left: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--success);
+    font-weight: 600;
+}
+
+.program-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    background: #f7fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.program-info h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: var(--primary);
+}
+
+.program-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+}
+
+.program-details span {
+    color: var(--text-light);
+}
+
+.password-hidden {
+    background: var(--border);
+    padding: 0.1rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.password-hidden:hover {
+    background: #cbd5e0;
+}
+
+.program-actions {
+    flex-shrink: 0;
+}
+
+.add-program-form {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.security-note {
+    background: #fffff0;
+    border-color: var(--gold);
+}
+
+.security-note p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
 /* Empty state */
 .empty-state {
     text-align: center;
